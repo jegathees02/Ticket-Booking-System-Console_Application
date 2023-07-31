@@ -7,9 +7,31 @@ import java.util.*;
 import main.java.dao.EventDAO;
 import main.java.dao.TicketDAO;
 import main.java.dao.UserDAO;
+import main.java.model.Event;
+import main.java.model.Ticket;
 import main.java.model.User;
 
-class TicketBookingApplication{
+interface inf{
+  void login_initial();
+}
+
+// class MainHeading{
+//   public void welcomeMsg() {
+//     System.out.println("Welcome to Ticket Booking System");
+//   }
+// }
+// class MainTitle extends MainHeading{
+//   public void welcomeTitle() {
+//     System.out.println("Best application for ticket booking");
+//   }
+// }
+// class MainDescription extends MainTitle{
+//   public void welcomeDescription() {
+//     System.out.println("Enjoy your events by using our application.");
+//   }
+// }
+
+class TicketBookingApplication implements inf{
   private static final EventDAO eventdao;
   private static final UserDAO userdao;
   private static final TicketDAO ticketdao;
@@ -137,13 +159,14 @@ class TicketBookingApplication{
     System.out.println("Enter Your Login details here:");
     System.out.println("Enter your username:");
     String user_username = sc.nextLine();
-    System.out.println("Enter your username:");
+    System.out.println("Enter your Password:");
     String user_password = sc.nextLine();
     try{
       User user = userdao.getUserByUsernameAndPasswordUser(user_username,user_password);
         if(user != null) {
           System.out.println("Login Successful");
           // adminMenu();
+          userMenu();
 
         }
         else{
@@ -163,6 +186,10 @@ class TicketBookingApplication{
           "*                                                               * \n"+
           "***************************************************************** \n"
         );
+        // MainDescription md = new MainDescription();
+        // md.welcomeMsg();
+        // md.welcomeTitle();
+        // md.welcomeDescription();
         TicketBookingApplication tbs = new TicketBookingApplication();
 
         //inital calling to select the admin or user.
@@ -182,7 +209,7 @@ class TicketBookingApplication{
       for(int i=0;i<n;i++) System.out.print("-");
     }
 
-    public void userMenu() {
+    public void userMenu() throws SQLException {
       Scanner sc = new Scanner(System.in);
       printStar(8);
       System.out.print("User Menu");
@@ -197,17 +224,24 @@ class TicketBookingApplication{
       if(n == 1) {
         displayEventDetails();
       }else if(n == 2) {
+        cancelTicket();
 
       }else if(n == 3) {
-
+        
       }else{
         System.out.println("Invalid Input!!!");
         userMenu();
       }
       sc.close();
     }
-    public void displayEventDetails() {
+    public void displayEventDetails() throws SQLException{
       Scanner sc = new Scanner(System.in);
+      List<Event> event = eventdao.getAllEvents();
+      if(event != null) {
+        for(Event events : event) {
+          System.out.println(events);
+        }
+      }
       System.out.println("Select One");
       System.out.println("1:Book Tickets");
       System.out.println("2:View Seats");
@@ -216,9 +250,13 @@ class TicketBookingApplication{
       System.out.println("5:Logout");
       int n = sc.nextInt();
       switch(n) {
-        case 1 : bookTicketForEvent();
+        case 1 : System.out.print("Enter the event_id for which you need to book ticket:");
+                  String e_id = sc.nextLine();
+                  bookTicketForEvent(e_id);
                   break;
-        case 2 : viewSeatsForEvents();
+        case 2 : System.out.print("Enter the event_id you need to view the seats:");
+                String ev_id = sc.nextLine();
+                  viewSeatsForEvents(ev_id);
                   break;
         case 3 : userMenu();
                   break;
@@ -229,29 +267,57 @@ class TicketBookingApplication{
         default : System.out.println("Please Enter the correct value");
                   displayEventDetails();
       }
+      sc.close();
     }
-    public void bookTicketForEvent() {
+    public void bookTicketForEvent(String event_id) throws SQLException {
+      Scanner sc = new Scanner(System.in);
+      System.out.println("Select the type of seat:");
+      System.out.println("1:Normal");
+      System.out.println("2:VIP");
+      int t_type = sc.nextInt();
+      if(t_type == 1) {
+
+      }
+      else if(t_type == 2) {
+
+      }
+      else{
+        System.out.println("Enter the correct value");
+        bookTicketForEvent(event_id);
+      }
       System.out.println("Ticket Booked Successfully");
+
       System.out.println("Redirecting...");
       try {
         Thread.sleep(5000);
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       displayEventDetails();
       
     }
-
-    public void viewSeatsForEvents() {
-      System.out.println("The total number of seats are:");
-      System.out.println("Redirecting...");
-      try {
-        Thread.sleep(5000);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    public void cancelTicket() throws SQLException {
+      Scanner sc = new Scanner(System.in);
+      System.out.println("Enter your user_id");
+      String us_id = sc.nextLine();
+      System.out.println("Your registered events:");
+      List<Ticket> ticket = ticketdao.getTicketsByUserId(us_id);
+      if(ticket != null) {
+        for(Ticket tickets : ticket){
+          System.out.println(tickets);
+        }
       }
-      displayEventDetails();
+      System.out.println("Select the event_id for which you need to cancel tickets");
+      String ev_id = sc.nextLine();
+      System.out.println("Cancelling your tickets");
+      ticketdao.deleteTicketByEvent_idANDUser_id(ev_id,us_id);
+      System.out.println("Ticket cancelled");
+      sc.close();
+    }
+
+    public void viewSeatsForEvents(String event_id) throws SQLException {
+      System.out.println("The total number of seats are:");
+      int tot = ticketdao.getTicketByEvent_id(event_id);
+      System.out.println(tot);
     }
 }

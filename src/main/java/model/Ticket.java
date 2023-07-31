@@ -1,5 +1,6 @@
 package main.java.model;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Ticket {
@@ -74,6 +75,17 @@ public class Ticket {
     }
 
     
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return "Ticket ID: " + ticket_id +
+               "\nUser ID: " + user_id +
+               "\nEvent ID: " + event_id +
+               "\nSeat Number: " + seat_number +
+               "\nEvent Date: " + dateFormat.format(event_date) +
+               "\nBooking Date: " + dateFormat.format(booking_date) + "\n";
+    }
 
     
 }

@@ -20,7 +20,7 @@ public class EventDAO {
 
     public List<Event> getAllEvents() throws SQLException {
         List<Event> events = new ArrayList<>();
-        String query = "SELECT * FROM events";
+        String query = "SELECT * FROM event";
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
@@ -28,7 +28,7 @@ public class EventDAO {
                 event.setEvent_id(resultSet.getString("event_id"));
                 event.setEvent_name(resultSet.getString("event_name"));
                 event.setEvent_date(resultSet.getDate("event_date"));
-                event.setEvent_venue(resultSet.getString("venue"));
+                event.setEvent_venue(resultSet.getString("event_venue"));
                 event.setCapacity(resultSet.getInt("capacity"));
                 events.add(event);
             }
@@ -37,7 +37,7 @@ public class EventDAO {
     }
 
     public Event getEventById(int eventId) throws SQLException {
-        String query = "SELECT * FROM events WHERE event_id = ?";
+        String query = "SELECT * FROM event WHERE event_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, eventId);
             try (ResultSet resultSet = statement.executeQuery()) {

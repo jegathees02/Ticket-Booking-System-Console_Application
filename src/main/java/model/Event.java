@@ -85,6 +85,16 @@ public class Event {
         this.capacity = capacity;
     }
 
+    @Override
+    public String toString() {
+        return "Event ID: " + event_id +
+               "\nEvent Name: " + event_name +
+               "\nEvent Date: " + event_date +
+               "\nEvent Venue: " + event_venue +
+               "\nEvent Date: " + event_date +
+               "\nCapacity: " + capacity + "\n";
+    }
+
     
 
     

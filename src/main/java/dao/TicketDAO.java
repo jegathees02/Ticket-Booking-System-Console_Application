@@ -133,4 +133,50 @@ public class TicketDAO {
             statement.executeUpdate();
         }
     }
+    public void deleteTicketByUser_id(String ticketId) throws SQLException {
+        String query = "DELETE FROM tickets WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, ticketId);
+            statement.executeUpdate();
+        }
+    }
+    public void deleteTicketByEvent_id(String ticketId) throws SQLException {
+        String query = "DELETE FROM tickets WHERE event_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, ticketId);
+            statement.executeUpdate();
+        }
+    }
+     public void deleteTicketByEvent_idANDUser_id(String ticketId,String user_id) throws SQLException {
+        String query = "DELETE FROM tickets WHERE event_id = ? and user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, ticketId);
+            statement.setString(2,user_id);
+            statement.executeUpdate();
+        }
+    }
+    public int getTicketByEvent_id(String event_id) throws SQLException {
+        String ticketCountQuery = "SELECT COUNT(*) FROM ticket WHERE event_id = ?";
+        String capacityQuery = "SELECT capacity FROM event WHERE event_id = ?";
+        int ticketCount = 0;
+        int eventCapacity = 0;
+        try (PreparedStatement ticketCountStatement = connection.prepareStatement(ticketCountQuery);
+             PreparedStatement capacityStatement = connection.prepareStatement(capacityQuery)) {
+            ticketCountStatement.setString(1, event_id);
+            capacityStatement.setString(1, event_id);
+            try (ResultSet ticketCountResult = ticketCountStatement.executeQuery()) {
+                if (ticketCountResult.next()) {
+                    ticketCount = ticketCountResult.getInt(1);
+                }
+            }
+            try (ResultSet capacityResult = capacityStatement.executeQuery()) {
+                if (capacityResult.next()) {
+                    eventCapacity = capacityResult.getInt("capacity");
+                }
+            }
+        }
+        int remainingSeats = eventCapacity - ticketCount;
+        return remainingSeats;
+    }
+    
 }

@@ -20,7 +20,7 @@ public class UserDAO {
 
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users";
+        String query = "SELECT * FROM user";
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
@@ -36,7 +36,7 @@ public class UserDAO {
     }
 
     public User getUserById(int userId) throws SQLException {
-        String query = "SELECT * FROM users WHERE user_id = ?";
+        String query = "SELECT * FROM user WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -54,7 +54,7 @@ public class UserDAO {
     }
 
     public void insertUser(User user) throws SQLException {
-        String query = "INSERT INTO users (name, email, phone) VALUES (?, ?, ?)";
+        String query = "INSERT INTO user (name, email, phone) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
@@ -75,7 +75,7 @@ public class UserDAO {
     }
 
     public void deleteUser(int userId) throws SQLException {
-        String query = "DELETE FROM users WHERE user_id = ?";
+        String query = "DELETE FROM user WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             statement.executeUpdate();
@@ -106,7 +106,7 @@ public class UserDAO {
         return null; // User with the given username and password not found
     }
     public User getUserByUsernameAndPasswordUser(String username, String password) throws SQLException {
-        String query = "SELECT * FROM users WHERE user_id = ? AND password = ?";
+        String query = "SELECT * FROM user WHERE user_id = ? AND password = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             statement.setString(2, password);
