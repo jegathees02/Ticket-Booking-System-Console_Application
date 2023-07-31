@@ -81,4 +81,47 @@ public class UserDAO {
             statement.executeUpdate();
         }
     }
+
+    // private Connection connection;
+
+    // public UserDAO() throws SQLException {
+    //     connection = DBConnector.getConnection();
+    // }
+
+    public User getUserByUsernameAndPasswordAdmin(String username, String password) throws SQLException {
+        String query = "SELECT * FROM admin WHERE admin_id = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    User user = new User();
+                    user.setUser_id(resultSet.getString("user_id"));
+                    // user.setUsername(resultSet.getString("username"));
+                    user.setPassword(resultSet.getString("password"));
+                    return user;
+                }
+            }
+        }
+        return null; // User with the given username and password not found
+    }
+    public User getUserByUsernameAndPasswordUser(String username, String password) throws SQLException {
+        String query = "SELECT * FROM users WHERE user_id = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    User user = new User();
+                    user.setUser_id(resultSet.getString("user_id"));
+                    // user.setUsername(resultSet.getString("username"));
+                    user.setPassword(resultSet.getString("password"));
+                    return user;
+                }
+            }
+        }
+        return null; // User with the given username and password not found
+    }
+
+    
 }
