@@ -20,7 +20,7 @@ public class TicketDAO {
 
     public List<Ticket> getAllTickets() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
-        String query = "SELECT * FROM tickets";
+        String query = "SELECT * FROM ticket";
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
@@ -38,7 +38,7 @@ public class TicketDAO {
     }
 
     public Ticket getTicketById(String ticketId) throws SQLException {
-        String query = "SELECT * FROM tickets WHERE ticket_id = ?";
+        String query = "SELECT * FROM ticket WHERE ticket_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticketId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -59,7 +59,7 @@ public class TicketDAO {
 
     public List<Ticket> getTicketsByUserId(String userId) throws SQLException {
         List<Ticket> userTickets = new ArrayList<>();
-        String query = "SELECT * FROM tickets WHERE user_id = ?";
+        String query = "SELECT * FROM ticket WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -80,7 +80,7 @@ public class TicketDAO {
 
     public List<Ticket> getTicketsByEventId(String eventId) throws SQLException {
         List<Ticket> eventTickets = new ArrayList<>();
-        String query = "SELECT * FROM tickets WHERE event_id = ?";
+        String query = "SELECT * FROM ticket WHERE event_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, eventId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -100,7 +100,7 @@ public class TicketDAO {
     }
 
     public void insertTicket(Ticket ticket) throws SQLException {
-        String query = "INSERT INTO tickets (ticket_id, event_id, user_id, seat_number, event_date, booking_date) " +
+        String query = "INSERT INTO ticket (ticket_id, event_id, user_id, seat_number, event_date, booking_date) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticket.getTicket_id());
@@ -114,7 +114,7 @@ public class TicketDAO {
     }
 
     public void updateTicket(Ticket ticket) throws SQLException {
-        String query = "UPDATE tickets SET event_id = ?, user_id = ?, seat_number = ?, event_date = ?, booking_date = ? WHERE ticket_id = ?";
+        String query = "UPDATE ticket SET event_id = ?, user_id = ?, seat_number = ?, event_date = ?, booking_date = ? WHERE ticket_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticket.getEvent_id());
             statement.setString(2, ticket.getUser_id());
@@ -127,28 +127,28 @@ public class TicketDAO {
     }
 
     public void deleteTicket(String ticketId) throws SQLException {
-        String query = "DELETE FROM tickets WHERE ticket_id = ?";
+        String query = "DELETE FROM ticket WHERE ticket_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticketId);
             statement.executeUpdate();
         }
     }
     public void deleteTicketByUser_id(String ticketId) throws SQLException {
-        String query = "DELETE FROM tickets WHERE user_id = ?";
+        String query = "DELETE FROM ticket WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticketId);
             statement.executeUpdate();
         }
     }
     public void deleteTicketByEvent_id(String ticketId) throws SQLException {
-        String query = "DELETE FROM tickets WHERE event_id = ?";
+        String query = "DELETE FROM ticket WHERE event_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticketId);
             statement.executeUpdate();
         }
     }
      public void deleteTicketByEvent_idANDUser_id(String ticketId,String user_id) throws SQLException {
-        String query = "DELETE FROM tickets WHERE event_id = ? and user_id = ?";
+        String query = "DELETE FROM ticket WHERE event_id = ? and user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, ticketId);
             statement.setString(2,user_id);
@@ -178,5 +178,71 @@ public class TicketDAO {
         int remainingSeats = eventCapacity - ticketCount;
         return remainingSeats;
     }
+
+    public List<Ticket> getTicketsByEventIdAndUserId(String eventId, String userId) throws SQLException {
+        List<Ticket> userTickets = new ArrayList<>();
+        String query = "SELECT * FROM ticket WHERE event_id = ? AND user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, eventId);
+            statement.setString(2, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Ticket ticket = new Ticket();
+                    ticket.setTicket_id(resultSet.getString("ticket_id"));
+                    ticket.setEvent_id(resultSet.getString("event_id"));
+                    ticket.setUser_id(resultSet.getString("user_id"));
+                    ticket.setSeat_number(resultSet.getString("seat_number"));
+                    ticket.setEvent_date(resultSet.getDate("event_date"));
+                    ticket.setBooking_date(resultSet.getDate("booking_date"));
+                    userTickets.add(ticket);
+                }
+            }
+        }
+        return userTickets;
+    }
+
+    public List<Ticket> FindTicket(String userId) throws SQLException {
+        List<Ticket> userTickets = new ArrayList<>();
+        String query = "SELECT * FROM ticket WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Ticket ticket = new Ticket();
+                    ticket.setTicket_id(resultSet.getString("ticket_id"));
+                    ticket.setEvent_id(resultSet.getString("event_id"));
+                    ticket.setUser_id(resultSet.getString("user_id"));
+                    ticket.setSeat_number(resultSet.getString("seat_number"));
+                    ticket.setEvent_date(resultSet.getDate("event_date"));
+                    ticket.setBooking_date(resultSet.getDate("booking_date"));
+                    userTickets.add(ticket);
+                }
+            }
+        }
+        return userTickets;
+    }
+
+    public List<Ticket> FindTicket(String userId, String eventId) throws SQLException {
+        List<Ticket> matchingTickets = new ArrayList<>();
+        String query = "SELECT * FROM ticket WHERE user_id = ? AND event_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userId);
+            statement.setString(2, eventId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Ticket ticket = new Ticket();
+                    ticket.setTicket_id(resultSet.getString("ticket_id"));
+                    ticket.setEvent_id(resultSet.getString("event_id"));
+                    ticket.setUser_id(resultSet.getString("user_id"));
+                    ticket.setSeat_number(resultSet.getString("seat_number"));
+                    ticket.setEvent_date(resultSet.getDate("event_date"));
+                    ticket.setBooking_date(resultSet.getDate("booking_date"));
+                    matchingTickets.add(ticket);
+                }
+            }
+        }
+        return matchingTickets;
+    }
+    
     
 }

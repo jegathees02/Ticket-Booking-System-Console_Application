@@ -74,6 +74,13 @@ public class Ticket {
         this.booking_date = booking_date;
     }
 
+    public void displayTicketDetails() {
+        System.out.println("Ticket ID: " + ticket_id);
+        System.out.println("User ID: " + user_id);
+        System.out.println("Event ID: " + event_id);
+        // System.out.println("Ticket Type: " + ticket_type);
+    }
+
     
     @Override
     public String toString() {

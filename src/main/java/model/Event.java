@@ -8,6 +8,8 @@ public class Event {
     private Date event_date;
     private String event_venue;
     private int capacity;
+    private int tot_normal;
+    private int tot_vip;
 
     
     public Event() {
@@ -16,13 +18,15 @@ public class Event {
 
 
     public Event(String event_id, String event_name, String event_type, Date event_date, String event_venue,
-            int capacity) {
+            int capacity,int tot_normal, int tot_vip) {
         this.event_id = event_id;
         this.event_name = event_name;
         this.event_type = event_type;
         this.event_date = event_date;
         this.event_venue = event_venue;
         this.capacity = capacity;
+        this.tot_normal = tot_normal;
+        this.tot_vip = tot_vip;
     }
 
 
@@ -84,7 +88,21 @@ public class Event {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+    public int getTot_normal() {
+        return tot_normal;
+    }
+    public void setTot_normal(int tot_normal) {
+        this.tot_normal = tot_normal;
+    }
 
+    public int getTot_vip() {
+        return tot_vip;
+    }
+    
+    public void setTot_vip(int tot_vip) {
+        this.tot_vip = tot_vip;
+    }
+    
     @Override
     public String toString() {
         return "Event ID: " + event_id +
